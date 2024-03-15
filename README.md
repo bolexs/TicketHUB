@@ -1,9 +1,9 @@
 <p align="center">
   <a href="" rel="noopener">
- <img width=200px height=200px src="https://www.canva.com/design/DAF_mwMsw4o/GlYPBhvZIJ6q3Upj2rVDDw/view?utm_content=DAF_mwMsw4o&utm_campaign=designshare&utm_medium=link&utm_source=editor" alt="Project logo"></a>
+ <img width=200px height=200px src="https://i.pinimg.com/originals/f9/ca/ad/f9caad5c1cf0d948ea9c747160ca342b.jpg" alt="TicketHUB"></a>
 </p>
 
-<h3 align="center">Project Title</h3>
+<h3 align="center">TicketHUB</h3>
 
 <div align="center">
 
