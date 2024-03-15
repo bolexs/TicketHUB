@@ -27,8 +27,6 @@
 - [Deployment](#deployment)
 - [Usage](#usage)
 - [Built Using](#built_using)
-- [TODO](../TODO.md)
-- [Contributing](../CONTRIBUTING.md)
 - [Authors](#authors)
 - [Acknowledgments](#acknowledgement)
 
@@ -38,74 +36,119 @@ Write about 1-2 paragraphs describing the purpose of your project.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project on a live system.
+These instructions will get you a copy of TicketHUB API up and running on your local machine for development and testing purposes. See [deployment](#deployment) for notes on how to deploy the project.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them.
+ You need to install Python on your local computer, kindly follow the highlighted text to install it if you don't have it installed.
 
-```
-Give examples
-```
+- [Python](https://www.python.org/downloads/)
 
 ### Installing
 
-A step by step series of examples that tell you how to get a development env running.
+You can install by first cloning the repository, then following the steps and procedures as listed below.
 
-Say what the step will be
+Git clone
 
-```
-Give the example
-```
+  ```bash
+  git clone repo
+  ```
 
-And repeat
+Setup virtual environment
 
-```
-until finished
-```
+  ```bash
+  cd backend
+  python -m venv venv
+  source venv/bin/activate   # for linux
+  venv\Scripts\activate      # for windows
+  ```
 
-End with an example of getting some data out of the system or using it for a little demo.
+Install dependencies
+
+  ```bash
+  pip install -r requirements.txt
+  ```
+
+Also you need to create a logs folder in the backend directory
+
+  ```bash
+  mkdir logs
+  ```
+
+Create .env file
+
+  ```bash
+  cd app
+  touch .env
+  ```
+
+Copy the example in env.example and paste it in .env
+
+  ```bash
+  cp env.example .env
+  ```
+
+  You can use sqlite by default, but if you want to use postgresql, you need to install it and create a database and set it as the `DB_TYPE` in the .env file. Same goes for mysql.
+
+Before running the server, you need to run the migrations. We are making use of [alembic](https://alembic.sqlalchemy.org/en/latest/), which is a migration tool used in python.
+
+ To run migrations
+
+ ```bash
+
+ ```
+
+ > [!CAUTION]
+ > Ensure to run migrations after every change done to the models and schema so it will immediately be reflected to the database.
+
+ To run server
+
+ ```bash
+   uvicorn main:app --host 0.0.0.0 --port 80 --reload
+ ```
+
+ > [!NOTE]
+> Docker implementation will be done after initial set up has been done
+
 
 ## 🔧 Running the tests <a name = "tests"></a>
 
-Explain how to run the automated tests for this system.
+Make sure you are in the root directory of the project.
 
-### Break down into end to end tests
+  ```bash
+  cd app
+  ```
 
-Explain what these tests test and why
-
-```
-Give an example
-```
+  ```bash
+  pytest
+  ```
 
 ### And coding style tests
 
-Explain what these tests test and why
+Flake8 is a Python linting tool that checks your Python codebase for errors, styling issues and complexity
 
+```bash
+flake8 app
 ```
-Give an example
-```
 
-## 🎈 Usage <a name="usage"></a>
-
-Add notes about how to use the system.
 
 ## 🚀 Deployment <a name = "deployment"></a>
 
-Add additional notes about how to deploy this on a live system.
+> [!NOTE]
+> Will be updated
 
 ## ⛏️ Built Using <a name = "built_using"></a>
 
-- [MongoDB](https://www.mongodb.com/) - Database
-- [Express](https://expressjs.com/) - Server Framework
-- [VueJs](https://vuejs.org/) - Web Framework
-- [NodeJs](https://nodejs.org/en/) - Server Environment
+- [PostgresSQL](https://www.postgresql.org/) - Database
+- [FastAPI](https://fastapi.tiangolo.com/) - Server Framework
+
 
 ## ✍️ Authors <a name = "authors"></a>
 
-- [@kylelobo](https://github.com/kylelobo) - Idea & Initial work
+- [@Bolu Ade-ojo](https://github.com/bolexs)
+- [@Babafemi Olatona](https://github.com/babafemiolatona)
 
-See also the list of [contributors](https://github.com/kylelobo/The-Documentation-Compendium/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/bolexs/TicketHUB/contributors) who participated in this project.
 
 ## 🎉 Acknowledgements <a name = "acknowledgement"></a>
 
