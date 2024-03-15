@@ -56,7 +56,7 @@ Git clone
 Setup virtual environment
 
   ```bash
-  cd backend
+  cd app
   python -m venv venv
   source venv/bin/activate   # for linux
   venv\Scripts\activate      # for windows
