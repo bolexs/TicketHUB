@@ -38,6 +38,7 @@ psycopg2-binary==2.9.9
 pyasn1==0.5.1
 pycodestyle==2.11.1
 pydantic==2.6.4
+pydantic-settings==2.2.1
 pydantic_core==2.16.3
 pyflakes==3.2.0
 pytest==8.1.1
