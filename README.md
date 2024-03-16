@@ -50,7 +50,7 @@ You can install by first cloning the repository, then following the steps and pr
 Git clone
 
   ```bash
-  git clone repo
+  git clone git@github.com:bolexs/TicketHUB.git
   ```
 
 Setup virtual environment
