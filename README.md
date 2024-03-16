@@ -31,7 +31,7 @@
 
 ## 🧐 About <a name = "about"></a>
 
-Write about 1-2 paragraphs describing the purpose of your project.
+TicketHUB aims to provide developers with a seamless and efficient experience for integrating event ticketing functionality into their applications.
 
 ## 🏁 Getting Started <a name = "getting_started"></a>
 
@@ -68,12 +68,6 @@ Install dependencies
   pip install -r requirements.txt
   ```
 
-Also you need to create a logs folder in the backend directory
-
-  ```bash
-  mkdir logs
-  ```
-
 Create .env file
 
   ```bash
@@ -94,7 +88,7 @@ Before running the server, you need to run the migrations. We are making use of 
  To run migrations
 
  ```bash
-
+  alembic upgrade head
  ```
 
  > [!CAUTION]
