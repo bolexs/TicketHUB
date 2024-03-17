@@ -97,7 +97,7 @@ Before running the server, you need to run the migrations. We are making use of 
  To run server
 
  ```bash
-   uvicorn main:app --host 0.0.0.0 --port 80 --reload
+   uvicorn main:app --reload
  ```
 
  > [!NOTE]
