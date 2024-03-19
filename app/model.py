@@ -31,3 +31,21 @@ class Event(Base):
     organizer_id = Column(Integer, ForeignKey("users.id"))
     category = relationship("Category", back_populates="events")
     category_id = Column(Integer, ForeignKey("categories.id"))
+
+class Ticket(Base):
+    __tablename__ = "tickets"
+
+    id = Column(Integer, primary_key=True, index=True)
+    event_id = Column(Integer, ForeignKey("events.id"))
+    user_id = Column(Integer, ForeignKey("users.id"))
+    purchase_date = Column(DateTime, default=datetime.now)
+    attendee = relationship("Users", back_populates="tickets")
+    event = relationship("Event", back_populates="tickets")
+
+class Category(Base):
+    __tablename__ = "categories"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    description = Column(String, index=True)
+    events = relationship("Event", back_populates="category")
