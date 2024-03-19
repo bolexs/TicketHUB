@@ -1,3 +1,4 @@
+import bcrypt
 from .database import Base
 from sqlalchemy import (Column, Integer, String,
                         DateTime, Float, ForeignKey)
@@ -12,8 +13,20 @@ class Users(Base):
     username = Column(String, index=True)
     email = Column(String, index=True)
     role = Column(String, index=True)
+    _password = Column("password", index=True)
     events = relationship("Event", back_populates="organizer")
     tickets = relationship("Ticket", back_populates="attendee")
+
+    @property
+    def password(self):
+        raise AttributeError("Password: write-only field")
+    
+    @password.setter
+    def password(self, password_input):
+        self._password = bcrypt.hashpw(password_input.encode('utf-8'), bcrypt.gensalt()).decode()
+
+    def check_password(self, password_input):
+        return bcrypt.checkpw(password_input.encode('utf-8'), self._password.encode())
 
 class Event(Base):
     __tablename__ = "events"
