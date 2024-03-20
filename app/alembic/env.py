@@ -38,6 +38,7 @@ def get_url():
     DB_HOST = settings.DB_HOST
     DB_PORT = settings.DB_PORT
     DB_NAME = settings.DB_NAME
+    DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"  # noqa: E501
 
     if DB_TYPE == "sqlite":
         BASE_PATH = f"sqlite:///{BASE_DIR}"
