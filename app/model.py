@@ -37,7 +37,7 @@ class Event(Base):
     date = Column(DateTime, index=True, nullable=False)
     location = Column(String, index=True, nullable=False)
     price = Column(Float, index=True, nullable=False)
-    tickets = Column(Integer, index=True, nullable=False)
+    ticket = Column(Integer, index=True, nullable=False)
     created_at = Column(DateTime, default=datetime.now, nullable=False)
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
     organizer = relationship("Users", back_populates="events")

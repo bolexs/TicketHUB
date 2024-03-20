@@ -1,12 +1,11 @@
 from pydantic import BaseModel, EmailStr
 from typing import Optional, List
-from app.model import UserRole
 from .event import EventBase
 
 
 class UserRole(BaseModel):
-    attendee = "attendee"
-    organizer = "organizer"
+    attendee: str = "attendee"
+    organizer: str = "organizer"
 
 class UserBase(BaseModel):
     username: str
