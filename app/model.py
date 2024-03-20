@@ -13,7 +13,7 @@ class Users(Base):
     username = Column(String, index=True, nullable=False, unique=True)
     email = Column(String, index=True, nullable=False, unique=True)
     role = Column(String, index=True, nullable=False)
-    _password = Column("password", index=True, nullable=False)
+    _password = Column("password",String, index=True, nullable=False)
     events = relationship("Event", back_populates="organizer")
     tickets = relationship("Ticket", back_populates="attendee")
 
