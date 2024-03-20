@@ -1,16 +1,12 @@
 from pydantic import BaseModel, EmailStr
-from typing import Optional, List
+from typing import Optional, List, Literal
 from .event import EventBase
 
 
-class UserRole(BaseModel):
-    attendee: str = "attendee"
-    organizer: str = "organizer"
-
 class UserBase(BaseModel):
-    username: str
+    name: str
     email: EmailStr
-    role: UserRole
+    role: Literal["attendee", "organizer"]
 
 class UserCreate(UserBase):
     password: str
