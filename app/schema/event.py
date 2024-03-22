@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
+from typing import Optional
 
 class EventBase(BaseModel):
     name: str
@@ -7,12 +8,11 @@ class EventBase(BaseModel):
     date: datetime
     location: str
     price: float
-    tickets: int
-    organizer_id: int
-    category_id: int
+    ticket_count: int
 
 class EventCreate(EventBase):
-    pass
+    organizer_id: Optional[int] = None
+    category_id: Optional[int] = 0
 
 class EventUpdate(EventBase):
     pass

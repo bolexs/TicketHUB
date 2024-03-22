@@ -4,6 +4,7 @@ from sqlalchemy import (Column, Integer, String,
                         DateTime, Float, ForeignKey)
 from sqlalchemy.orm import relationship
 from datetime import datetime
+from utils.password_utils import hash_password, verify_password
 
 
 class Users(Base):
@@ -13,7 +14,7 @@ class Users(Base):
     name = Column(String, index=True, nullable=False, unique=True)
     email = Column(String, index=True, nullable=False, unique=True)
     role = Column(String, index=True, nullable=False)
-    _password = Column("password",String, index=True, nullable=False)
+    _password = Column("password", String, index=True, nullable=False)
     events = relationship("Event", back_populates="organizer")
     tickets = relationship("Ticket", back_populates="attendee")
 
@@ -23,10 +24,10 @@ class Users(Base):
     
     @password.setter
     def password(self, password_input):
-        self._password = bcrypt.hashpw(password_input.encode('utf-8'), bcrypt.gensalt()).decode()
+        self._password = hash_password(password_input)
 
-    def check_password(self, password_input):
-        return bcrypt.checkpw(password_input.encode('utf-8'), self._password.encode())
+    def verify_password(self, password_input):
+        return verify_password(password_input, self._password)
 
 class Event(Base):
     __tablename__ = "events"
@@ -44,7 +45,7 @@ class Event(Base):
     organizer = relationship("Users", back_populates="events")
     organizer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     category = relationship("Category", back_populates="events")
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=False)
+    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
 
 class Ticket(Base):
     __tablename__ = "tickets"
