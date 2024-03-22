@@ -55,3 +55,16 @@ def get_event(event_id: int, db: Session = Depends(get_session_local)):
         raise HTTPException(status_code=404, detail="Event not found")
 
     return event
+
+@router.delete('/events/{event_id}')
+def delete_event(event_id: int, db: Session = Depends(get_session_local)):
+    event = db.query(Event).filter(Event.id == event_id).first()
+
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
+
+    db.delete(event)
+    db.commit()
+
+    return {"message": "Event deleted successfully"}
+
