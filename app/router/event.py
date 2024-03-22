@@ -7,12 +7,12 @@ from app.schema.event import EventCreate
 from utils.auth import get_current_user
 from app.schema.user import TokenData
 
-router = APIRouter(tags=["Events"])
+router = APIRouter(tags=["Events"], prefix="/api/v1/events")
 
 def get_session_local():
     yield SessionLocal()
 
-@router.post("/events/", status_code=status.HTTP_201_CREATED)
+@router.post("", status_code=status.HTTP_201_CREATED)
 def create_event(event_data: EventCreate, token_data: TokenData = Depends(get_current_user), db: Session = Depends(get_session_local)):
     user = db.query(Users).filter(Users.email == token_data.email).first()
 
@@ -29,7 +29,7 @@ def create_event(event_data: EventCreate, token_data: TokenData = Depends(get_cu
     
     return {"message": "Event created successfully", "event": event}
 
-@router.put('/events/{event_id}')
+@router.put('/{event_id}')
 def update_event(event_id: int, event_data: EventCreate, token_data: TokenData = Depends(get_current_user), db: Session = Depends(get_session_local)):
     user = db.query(Users).filter(Users.email == token_data.email).first()
 
@@ -47,7 +47,7 @@ def update_event(event_id: int, event_data: EventCreate, token_data: TokenData =
 
     return {"message": "Event updated successfully"}
 
-@router.get('/events/{event_id}')
+@router.get('/{event_id}')
 def get_event(event_id: int, db: Session = Depends(get_session_local)):
     event = db.query(Event).filter(Event.id == event_id).first()
 
@@ -56,7 +56,7 @@ def get_event(event_id: int, db: Session = Depends(get_session_local)):
 
     return event
 
-@router.delete('/events/{event_id}')
+@router.delete('/{event_id}')
 def delete_event(event_id: int, db: Session = Depends(get_session_local)):
     event = db.query(Event).filter(Event.id == event_id).first()
 
@@ -67,4 +67,3 @@ def delete_event(event_id: int, db: Session = Depends(get_session_local)):
     db.commit()
 
     return {"message": "Event deleted successfully"}
-

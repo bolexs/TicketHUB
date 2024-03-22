@@ -10,7 +10,7 @@ from app.utils.auth import create_access_token
 from utils.password_utils import verify_password
 
 
-router = APIRouter(tags=['auth'])
+router = APIRouter(tags=['auth'], prefix='/api/v1/auth')
 
 @router.post('/login')
 def login(request:OAuth2PasswordRequestForm= Depends(), db: Session = Depends(database.get_db)):
