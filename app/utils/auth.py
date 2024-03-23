@@ -13,7 +13,7 @@ ALGORITHM = "HS256"
 
 
 # create OAuth2PasswordBearer instance with token url as parameter in json
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login") 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/auth/login") 
 
 # create access token
 
