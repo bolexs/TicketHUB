@@ -1,12 +1,20 @@
-from pydantic import BaseModel
+from pydantic import validator, BaseModel
 from typing import Optional
 from datetime import datetime
+
 
 class TicketBase(BaseModel):
     event_id: int
     user_id: int
+    quantity: int
 
-class TicketCreate(TicketBase):
+    @validator("quantity")
+    def quantity_must_be_positive(cls, v):
+        if v <= 0:
+            raise ValueError("Quantity must be positive")
+        return v
+
+class TicketPurchase(TicketBase):
     pass
 
 class TicketUpdate(TicketBase):

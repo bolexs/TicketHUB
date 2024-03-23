@@ -53,6 +53,7 @@ class Ticket(Base):
     id = Column(Integer, primary_key=True, index=True)
     event_id = Column(Integer, ForeignKey("events.id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    quantity = Column(Integer, index=True, nullable=False, default=1)
     purchase_date = Column(DateTime, default=datetime.now, nullable=False)
     attendee = relationship("Users", back_populates="tickets")
     event = relationship("Event", back_populates="tickets")

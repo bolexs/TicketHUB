@@ -11,8 +11,7 @@ class EventBase(BaseModel):
     ticket_count: int
 
 class EventCreate(EventBase):
-    organizer_id: Optional[int] = None
-    category_id: Optional[int] = 0
+    pass
 
 class EventUpdate(EventBase):
     pass
@@ -21,6 +20,7 @@ class EventInDB(EventBase):
     id: int
     created_at: datetime
     updated_at: datetime
+    ticket_count: int
 
     class Config:
         orm_mode = True
