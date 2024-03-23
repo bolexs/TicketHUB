@@ -48,20 +48,26 @@ def update_event(event_id: int, event_data: EventCreate, token_data: TokenData =
     return {"message": "Event updated successfully"}
 
 @router.get('/{event_id}')
-def get_event(event_id: int, db: Session = Depends(get_session_local)):
+def get_event(event_id: int, db: Session = Depends(get_session_local), current_user: TokenData = Depends(get_current_user)):
     event = db.query(Event).filter(Event.id == event_id).first()
 
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
+
+    if event.organizer.email != current_user.email:
+        raise HTTPException(status_code=403, detail="You are not authorized to view this event")
 
     return event
 
 @router.delete('/{event_id}')
-def delete_event(event_id: int, db: Session = Depends(get_session_local)):
+def delete_event(event_id: int, db: Session = Depends(get_session_local), current_user: TokenData = Depends(get_current_user)):
     event = db.query(Event).filter(Event.id == event_id).first()
 
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
+
+    if event.organizer.email != current_user.email:
+        raise HTTPException(status_code=403, detail="You are not authorized to delete this event")
 
     db.delete(event)
     db.commit()
