@@ -3,16 +3,18 @@ from fastapi import (status, HTTPException,
 from sqlalchemy.orm import Session
 from app.database import SessionLocal
 from app.model import Event, Users
-from app.schema.event import EventCreate
+from app.schema.event import EventCreate, EventInDB
 from utils.auth import get_current_user
 from app.schema.user import TokenData
+from typing import List
+
 
 router = APIRouter(tags=["Events"], prefix="/api/v1/events")
 
 def get_session_local():
     yield SessionLocal()
 
-@router.post("", status_code=status.HTTP_201_CREATED)
+@router.post('', status_code=status.HTTP_201_CREATED)
 def create_event(event_data: EventCreate, token_data: TokenData = Depends(get_current_user), db: Session = Depends(get_session_local)):
     user = db.query(Users).filter(Users.email == token_data.email).first()
 
@@ -29,7 +31,7 @@ def create_event(event_data: EventCreate, token_data: TokenData = Depends(get_cu
     
     return {"message": "Event created successfully", "event": event}
 
-@router.put('/{event_id}')
+@router.put('/{event_id}', response_model=EventInDB)
 def update_event(event_id: int, event_data: EventCreate, token_data: TokenData = Depends(get_current_user), db: Session = Depends(get_session_local)):
     user = db.query(Users).filter(Users.email == token_data.email).first()
 
@@ -47,7 +49,7 @@ def update_event(event_id: int, event_data: EventCreate, token_data: TokenData =
 
     return {"message": "Event updated successfully"}
 
-@router.get('/{event_id}')
+@router.get('/{event_id}', response_model=EventInDB)
 def get_event(event_id: int, db: Session = Depends(get_session_local), current_user: TokenData = Depends(get_current_user)):
     event = db.query(Event).filter(Event.id == event_id).first()
 
@@ -73,3 +75,16 @@ def delete_event(event_id: int, db: Session = Depends(get_session_local), curren
     db.commit()
 
     return {"message": "Event deleted successfully"}
+
+@router.get("/organizer/{organizer_id}", response_model=List[EventInDB])
+def get_events_by_organizer(organizer_id: int, db: Session = Depends(get_session_local), current_user: TokenData = Depends(get_current_user)):
+    events = db.query(Event).filter(Event.organizer_id == organizer_id).all()
+
+    for event in events:
+        if event.organizer.email != current_user.email:
+            raise HTTPException(status_code=403, detail="You are not authorized to view these events")
+
+    if not events:
+        raise HTTPException(status_code=404, detail="No events found for this organizer")
+
+    return events

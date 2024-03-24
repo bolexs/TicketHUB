@@ -20,6 +20,7 @@ class EventInDB(EventBase):
     id: int
     created_at: datetime
     updated_at: datetime
+    organizer_id: int
     ticket_count: int
 
     class Config:

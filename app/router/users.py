@@ -23,7 +23,7 @@ async def create_user(request: user.UserCreate, db: Session = Depends(database.g
 
     new_user = await services.new_user_register(request, db)
 
-    return {"message": "User created successfully", "user": new_user}
+    return {"message": "User created successfully"}
 
 
 

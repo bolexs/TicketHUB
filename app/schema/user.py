@@ -8,12 +8,12 @@ class UserBase(BaseModel):
     email: EmailStr
     role: Literal["attendee", "organizer"]
 
-
 class DisplayUser(BaseModel):
     id: int
     name: str
     email: str
     role: str
+
 class UserCreate(UserBase):
     password: str
 
