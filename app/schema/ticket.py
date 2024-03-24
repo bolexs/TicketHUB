@@ -5,7 +5,6 @@ from datetime import datetime
 
 class TicketBase(BaseModel):
     event_id: int
-    user_id: int
     quantity: int
 
     @validator("quantity")

@@ -19,18 +19,20 @@ def buy_ticket(ticket_data: TicketPurchase, token_data: TokenData = Depends(get_
     if user.role != "attendee":
         raise HTTPException(status_code=401, detail="Kindly login to purchase tickets.")
 
-        if not event:
-            raise HTTPException(status_code=404, detail="Event not found")
+    if not event:
+        raise HTTPException(status_code=404, detail="Event not found")
 
-        if event.ticket_available < ticket_data.quantity:
-            raise HTTPException(status_code=400, detail="Tickets are sold out.")
+    if event.ticket_count < ticket_data.quantity:
+        raise HTTPException(status_code=400, detail="Tickets are sold out.")
+
+    event.ticket_count -= ticket_data.quantity
 
     ticket = Ticket(event_id=ticket_data.event_id, user_id=user.id, quantity=ticket_data.quantity)
     db.add(ticket)
     db.commit()
     db.refresh(ticket)
 
-    return {"message": f"{ticket_data.quantity} Ticket purchased successfully.", "ticket_id": ticket.id}
+    return {"message": f"{ticket_data.quantity} Tickets purchased successfully.", "ticket_id": ticket.id}
 
 
 @router.get('/attendee/{user_id}', response_model=List[TicketInDB])
@@ -39,10 +41,10 @@ def get_tickets(user_id: int, current_user: TokenData = Depends(get_current_user
     tickets = db.query(Ticket).filter(Ticket.user_id == user_id).all()
 
     if user.role != "attendee":
-        raise HTTPException(status_code=401, detail="Kindly login to view tickets.")
+        raise HTTPException(status_code=401, detail="Only attendees are allowed to view tickets.")
 
-        if not tickets:
-            raise HTTPException(status_code=404, detail="No tickets found.")
+    if not tickets:
+        raise HTTPException(status_code=404, detail="No tickets found.")
 
     return tickets
 
@@ -57,6 +59,3 @@ def get_ticket(ticket_id: int, current_user: TokenData = Depends(get_current_use
         raise HTTPException(status_code=403, detail="You are not authorized to view this ticket.")
     
     return ticket
-
-       
-
