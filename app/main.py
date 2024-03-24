@@ -2,7 +2,7 @@ from fastapi import FastAPI, Request
 from app.database import engine, get_db # noqa: F401
 from fastapi.middleware.cors import CORSMiddleware
 from app import model
-from app.router import users, auth_user, event
+from app.router import users, auth_user, event, ticket
 
 model.Base.metadata.create_all(bind=engine)
 
@@ -12,6 +12,7 @@ app = FastAPI(title="TicketHUB", version="1.0.0")
 app.include_router(users.router)
 app.include_router(auth_user.router)
 app.include_router(event.router)
+app.include_router(ticket.router)
 
 app.add_middleware(
     CORSMiddleware,
