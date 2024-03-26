@@ -1,11 +1,15 @@
-import bcrypt
 from .database import Base
 from sqlalchemy import (Column, Integer, String,
-                        DateTime, Float, ForeignKey)
+                        DateTime, Float, ForeignKey, Table)
 from sqlalchemy.orm import relationship
 from datetime import datetime
 from utils.password_utils import hash_password, verify_password
 
+
+event_category = Table('event_category', Base.metadata,
+    Column('event_id', Integer, ForeignKey('events.id')),
+    Column('category_id', Integer, ForeignKey('categories.id'))
+)
 
 class Users(Base):
     __tablename__ = "users"
@@ -29,6 +33,9 @@ class Users(Base):
     def verify_password(self, password_input):
         return verify_password(password_input, self._password)
 
+    def __str__(self):
+        return f"User(name={self.name}, email={self.email}, role={self.role})"
+
 class Event(Base):
     __tablename__ = "events"
 
@@ -44,8 +51,11 @@ class Event(Base):
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
     organizer = relationship("Users", back_populates="events")
     organizer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    category = relationship("Category", back_populates="events")
+    category = relationship("Category", secondary=event_category, back_populates="events")
     category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+
+    def __str__(self):
+        return f"Event(name={self.name}, date={self.date}, location={self.location}, price={self.price}, ticket_count={self.ticket_count})"
 
 class Ticket(Base):
     __tablename__ = "tickets"
@@ -58,10 +68,16 @@ class Ticket(Base):
     attendee = relationship("Users", back_populates="tickets")
     event = relationship("Event", back_populates="tickets")
 
+    def __str__(self):
+        return f"Ticket(id={self.id}, user_id={self.user_id}, quantity={self.quantity}, purchase_date={self.purchase_date})"
+
 class Category(Base):
     __tablename__ = "categories"
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True, nullable=False)
     description = Column(String, index=True, nullable=True)
-    events = relationship("Event", back_populates="category")
+    events = relationship("Event", secondary=event_category, back_populates="category")
+
+    def __str__(self):
+        return f"Category(name={self.name}, description={self.description})"

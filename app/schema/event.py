@@ -14,7 +14,12 @@ class EventCreate(EventBase):
     pass
 
 class EventUpdate(EventBase):
-    pass
+    name: Optional[str] = None
+    description: Optional[str] = None
+    date: Optional[datetime] = None
+    location: Optional[str] = None
+    price: Optional[float] = None
+    ticket_count: Optional[int] = None
 
 class EventInDB(EventBase):
     id: int
@@ -25,3 +30,7 @@ class EventInDB(EventBase):
 
     class Config:
         orm_mode = True
+
+class EventResponse(BaseModel):
+    message: str
+    event: EventInDB
