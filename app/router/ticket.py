@@ -7,6 +7,8 @@ from app.schema.ticket import TicketPurchase, TicketInDB
 from utils.auth import get_current_user
 from app.schema.user import TokenData
 from typing import List
+from fastapi.responses import FileResponse
+from pdfdocument.document import PDFDocument
 
 
 router = APIRouter(tags=["Tickets"], prefix="/api/v1/tickets")
@@ -32,7 +34,18 @@ def buy_ticket(ticket_data: TicketPurchase, token_data: TokenData = Depends(get_
     db.commit()
     db.refresh(ticket)
 
-    return {"message": f"{ticket_data.quantity} Tickets purchased successfully.", "ticket_id": ticket.id}
+    # Create Pdf document
+    pdf = PDFDocument("ticket.pdf")
+    pdf.init_report()
+    pdf.h3("Ticket")
+    pdf.p(f"Ticket ID: {ticket.id}")
+    pdf.p(f"Event: {event.name}")
+    pdf.p(f"Ticket Quantity: {ticket.quantity}")
+    pdf.generate()
+
+    return FileResponse(path="ticket.pdf", media_type="application/pdf", headers={"Content-Disposition": "attachment; filename=ticket.pdf"})
+    #{"message": f"{ticket_data.quantity} Tickets purchased successfully.", "ticket_id": ticket.id}
+    
 
 
 @router.get('/attendee/{user_id}', response_model=List[TicketInDB])
