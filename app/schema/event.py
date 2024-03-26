@@ -34,3 +34,10 @@ class EventInDB(EventBase):
 class EventResponse(BaseModel):
     message: str
     event: EventInDB
+
+class EventSearch(BaseModel):
+    name: str
+    description: str
+    date: datetime
+    location: str
+    price: float

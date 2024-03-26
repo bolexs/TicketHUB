@@ -1,10 +1,11 @@
 from fastapi import (status, HTTPException,
                      Depends, APIRouter)
 from sqlalchemy.orm import Session
+from sqlalchemy import or_
 from app.database import SessionLocal
 from app.model import Event, Users, Ticket
 from app.schema.event import (EventCreate, EventInDB,
-                              EventResponse, EventUpdate)
+                              EventResponse, EventUpdate, EventSearch)
 from utils.auth import get_current_user
 from app.schema.user import TokenData
 from typing import List
@@ -107,4 +108,14 @@ def get_events_by_organizer(organizer_id: int, db: Session = Depends(get_session
     if not events:
         raise HTTPException(status_code=404, detail="No events found for this organizer")
 
+    return events
+
+
+@router.get("/",response_model=List[EventSearch])
+def search_for_events(q: str, db: Session = Depends(get_session_local), current_user: TokenData = Depends(get_current_user)):
+    events = db.query(Event).filter(or_(Event.name.contains(f"{q}"), Event.description.contains(f"{q}"))).all()
+
+    if events is None:
+        raise HTTPException(status_code=404, detail="Event not found.")
+    
     return events
