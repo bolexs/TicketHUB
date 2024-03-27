@@ -4,7 +4,6 @@ from typing import Optional
 class CategoryBase(BaseModel):
     name: str
     description: Optional[str] = None
-    event_id: Optional[int] = None
 
 class CategoryCreate(CategoryBase):
     pass

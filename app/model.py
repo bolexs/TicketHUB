@@ -51,8 +51,7 @@ class Event(Base):
     updated_at = Column(DateTime, default=datetime.now, onupdate=datetime.now, nullable=False)
     organizer = relationship("Users", back_populates="events")
     organizer_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    category = relationship("Category", secondary=event_category, back_populates="events")
-    category_id = Column(Integer, ForeignKey("categories.id"), nullable=True)
+    categories = relationship("Category", secondary=event_category, back_populates="events")
 
     def __str__(self):
         return f"Event(name={self.name}, date={self.date}, location={self.location}, price={self.price}, ticket_count={self.ticket_count})"
@@ -77,7 +76,7 @@ class Category(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True, nullable=False)
     description = Column(String, index=True, nullable=True)
-    events = relationship("Event", secondary=event_category, back_populates="category")
+    events = relationship("Event", secondary=event_category, back_populates="categories")
 
     def __str__(self):
         return f"Category(name={self.name}, description={self.description})"
