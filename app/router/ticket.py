@@ -43,7 +43,7 @@ def buy_ticket(ticket_data: TicketPurchase, token_data: TokenData = Depends(get_
     pdf.p(f"Ticket Quantity: {ticket.quantity}")
     pdf.generate()
 
-    return FileResponse(path="ticket.pdf", media_type="application/pdf", headers={"Content-Disposition": "attachment; filename=ticket.pdf"})
+    return FileResponse(path="ticket.pdf", media_type="application/pdf", headers={"Content-Disposition": f"attachment; filename=ticket_{ticket.id}.pdf"})
     #{"message": f"{ticket_data.quantity} Tickets purchased successfully.", "ticket_id": ticket.id}
     
 
