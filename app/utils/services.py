@@ -1,4 +1,4 @@
-from app.model import Users
+from app.model import Users, Event
 from typing import List, Optional
 from fastapi import HTTPException, status
 
@@ -24,3 +24,12 @@ async def delete_user_by_id(user_id, db):
     db.query(Users).filter(Users.id == user_id).delete()
     db.commit()
 
+
+async def new_event_register( db, event_data, user) -> List[Event]:
+    event_dict = event_data.dict()
+    event_dict.pop('organizer_id', None)
+    event = Event(**event_dict, organizer=user)
+    
+    db.add(event)
+    db.commit()
+    db.refresh(event)
