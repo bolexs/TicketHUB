@@ -17,7 +17,6 @@ router = APIRouter(tags=["Events"], prefix="/api/v1/events")
 @router.post('', status_code=status.HTTP_201_CREATED)
 async def create_event(event_data: EventCreate, token_data: TokenData = Depends(get_current_user), db: Session = Depends(database.get_db)):
     user = await validator.verify_email(token_data.email, db)
-    # user = db.query(Users).filter(Users.email == token_data.email).first()
 
     if user.role != "organizer":
         raise HTTPException(status_code=403, detail="Only organizers can create events")
@@ -46,9 +45,9 @@ def get_all_events(current_user: Users = Depends(get_current_user) ,db: Session 
     return events
 
 @router.get('/{event_id}', response_model=EventInDB)
-def get_event(event_id: int, db: Session = Depends(database.get_db), current_user: TokenData = Depends(get_current_user)):
-    event = db.query(Event).filter(Event.id == event_id).first()
-    user = db.query(Users).filter(Users.email == current_user.email).first()
+async def get_event(event_id: int, db: Session = Depends(database.get_db), current_user: TokenData = Depends(get_current_user)):
+    event = await validator.verify_event_exist(event_id, db)
+    user = await validator.verify_email(current_user.email, db)
     user_tickets = db.query(Ticket).filter(Ticket.user_id == user.id).all()
 
     if not user:
