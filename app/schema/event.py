@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 
 class EventBase(BaseModel):
     name: str
@@ -33,7 +33,7 @@ class EventInDB(EventBase):
 
 class EventResponse(BaseModel):
     message: str
-    event: EventInDB
+
 
 class EventSearch(BaseModel):
     name: str

@@ -33,3 +33,20 @@ async def new_event_register( db, event_data, user) -> List[Event]:
     db.add(event)
     db.commit()
     db.refresh(event)
+
+async def update_event_service(db, event_id, event_data, user) -> List[Event]:
+
+    event_dict = event_data.dict(exclude_unset=True)
+    event_dict.pop('organizer_id', None)
+
+    event = db.query(Event).filter(Event.id == event_id).first()
+
+    if event.organizer.email != user.email:
+        raise HTTPException(status_code=403, detail="You are not authorized to update this event")
+    
+    for key, value in event_dict.items():
+        setattr(event, key, value)
+
+    db.query(Event).filter(Event.id == event_id).update(event_dict)
+    db.commit()
+    db.refresh(event)

@@ -27,28 +27,15 @@ async def create_event(event_data: EventCreate, token_data: TokenData = Depends(
     return {"message": "Event created successfully"}
 
 @router.put('/{event_id}', response_model=EventResponse)
-def update_event(event_id: int, event_data: EventUpdate, token_data: TokenData = Depends(get_current_user), db: Session = Depends(database.get_db)):
-    user = db.query(Users).filter(Users.email == token_data.email).first()
+async def update_event(event_id: int, event_data: EventUpdate, token_data: TokenData = Depends(get_current_user), db: Session = Depends(database.get_db)):
+    user = await validator.verify_email(token_data.email, db)
 
     if user.role != "organizer":
         raise HTTPException(status_code=403, detail="Only organizers can update events")
 
-    event_dict = event_data.dict(exclude_unset=True)
-    event_dict.pop('organizer_id', None)
+    event = await services.update_event_service(db, event_id, event_data, user)
 
-    event = db.query(Event).filter(Event.id == event_id).first()
-
-    if event.organizer.email != user.email:
-        raise HTTPException(status_code=403, detail="You are not authorized to update this event")
-    
-    for key, value in event_dict.items():
-        setattr(event, key, value)
-
-    db.query(Event).filter(Event.id == event_id).update(event_dict)
-    db.commit()
-    db.refresh(event)
-
-    return {"message": "Event updated successfully", "event": event}
+    return {"message": "Event updated successfully"}
 
 @router.get("/all-events", response_model=List[EventInDB])
 def get_all_events(current_user: Users = Depends(get_current_user) ,db: Session = Depends(database.get_db)):
